@@ -1,0 +1,9 @@
+package io.vedder.robotics.particlefilter;
+
+public class TestMain {
+
+  public static void main(String[] args) {
+    System.out.println("Starting Particle Filter Tester!");
+  }
+
+}

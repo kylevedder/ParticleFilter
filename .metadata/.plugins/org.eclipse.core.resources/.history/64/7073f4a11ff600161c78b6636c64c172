@@ -1,0 +1,28 @@
+package io.vedder.robotics.particlefilter;
+
+import io.vedder.robotics.particlefilter.messages.SensorMessage;
+
+public class SensorModel {
+  private final double SIGMA;
+
+  public SensorModel() {
+    SIGMA = 1;
+  }
+
+  public void sampleSensor(final SensorMessage sensorModel, final Pose belief) {
+    double currentAngle = sensorModel.getMinAngle();
+    double angleDelta = sensorModel.getAngleIncrement();
+    
+    for (double scan : sensorModel.getScanRays()) {
+      
+      
+      double sampledNoise = Utils.randomN(scan, SIGMA);
+      currentAngle += angleDelta;
+    }
+    
+//    The number of scan rays, N
+//    3. Min angle
+//    4. Max angle
+//    5. Angle increment
+  }
+}

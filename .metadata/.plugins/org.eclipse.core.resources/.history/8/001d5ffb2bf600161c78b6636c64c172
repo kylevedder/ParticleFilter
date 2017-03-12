@@ -1,0 +1,26 @@
+package io.vedder.robotics.particlefilter;
+
+import java.util.Arrays;
+
+import io.vedder.robotics.particlefilter.messages.SensorMessage;
+
+public class TestMain {
+
+  public static void main(String[] args) {
+    System.out.println("Starting Particle Filter Tester!");
+    System.out.println("Working Directory = " + System.getProperty("user.dir"));
+    String mapPath = "../reference-material/assignment-2-data/map-test.txt";
+    // String logPath = "../reference-material/assignment-2-data/robot-data.log";
+
+    Map map = new Map(mapPath);
+    SensorModel sensorModel = new SensorModel();
+    ParticleContainer particleContainer =
+        new ParticleContainer(50, new Pose(5, 5, 0), sensorModel, map);
+
+    SensorMessage sm = new SensorMessage(0, 1, 0, 0, 0, Arrays.asList(5.0));
+    particleContainer.updateAndResample(sm);
+    
+    particleContainer.getParticles()
+  }
+
+}

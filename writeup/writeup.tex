@@ -1,0 +1,62 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{mathtools}
+\graphicspath{ {images/} }
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\newcommand{\topic}[1] {\vspace{.25in} \hrule\vspace{0.5em}
+  \noindent{\bf #1} \vspace{0.5em}
+  \hrule \vspace{.10in}}
+\renewcommand{\part}[1] {\vspace{.10in} {\bf (#1)}}
+
+\newcommand{\myname}{Kyle Vedder}
+\newcommand{\myaddress}{kvedder@umass.edu}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+
+\pagestyle{fancyplain}
+\lhead{\fancyplain{}{\textbf{CS-603 Particle Filter}}}
+\rhead{\fancyplain{Kyle Vedder}{\myname\\ \myaddress}}
+\chead{\fancyplain{}{}}
+\usepackage{color}
+
+\newenvironment{answer}{\color{blue}\ttfamily}{\par}
+
+\begin{document}
+
+\medskip 
+\thispagestyle{plain}
+\begin{center}
+  {\Large CS-603 Particle Filter} \\
+  \myaddress\\
+  \today \\
+\end{center}
+
+\topic{Background}
+
+The goal of this assignment was to implement a particle filter to do
+localization of a robot, given a map as well as real odometry and laser scan
+data. The challenges faced are that neither the laser scan nor the odometry are
+noise free, and thus treating them as the ground truth will lead to incorrect
+localization.
+
+For this specific implementation, odometry is run at 20hz and laser scans are
+run at 10hz. In addition, odometry data is particularly noisey,
+meaning that the distribution of possible locations after an odometry move is
+fairly large, and that without the aid of laser data to facilitate convergence
+of possible locations, the uncertainty of positions can grow to be rather large.
+
+\topic{Motion Model}
+
+The motion model captures the uncertainty in the movement of the robot. For
+example, if the robot reports moving forward $0.1m$
+
+\end{document}

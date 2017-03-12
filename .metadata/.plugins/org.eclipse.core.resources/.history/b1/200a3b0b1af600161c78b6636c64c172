@@ -1,0 +1,18 @@
+package io.vedder.robotics.particlefilter;
+
+import java.util.Random;
+
+public class Utils {
+  static final Random random = new Random();
+  
+  // Return a random value drawn from a Normal distribution.
+  public static double randomN(final double mean, final double stddev) {
+    // Uses Box-Muller transform to turn a pair of uniform random
+    // numbers into a pair of gaussian random numbers
+    double u1 = ((double) random.nextInt(Integer.MAX_VALUE)) / ((double) Integer.MAX_VALUE);
+    double u2 = ((double) random.nextInt(Integer.MAX_VALUE)) / ((double) Integer.MAX_VALUE);
+    double z1 = Math.sqrt(-2.0 * Math.log(u1)) * Math.sin(2.0 * Math.PI * u2);
+    double x1 = z1 * stddev + mean;
+    return x1;
+  }
+}

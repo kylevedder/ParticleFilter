@@ -1,0 +1,53 @@
+package io.vedder.robotics.particlefilter;
+
+import java.util.Optional;
+
+import io.vedder.robotics.particlefilter.messages.SensorMessage;
+
+public class SensorModel {
+  private final double SIGMA;
+  private final double RAYMAX;
+
+  public SensorModel() {
+    SIGMA = 1;
+    RAYMAX = 4;
+  }
+
+  public double sampleSensor(final SensorMessage sensorModel, final Pose belief, final Map map) {
+    double currentAngle = sensorModel.getMinAngle();
+    double angleDelta = sensorModel.getAngleIncrement();
+
+    // Default of 1 due to need identity for multiplication.
+    double error = 1;
+
+    for (double scan : sensorModel.getScanRays()) {
+      Vector2d centerOfRobot = new Vector2d(belief.getX(), belief.getY());
+      Vector2d rayEndpoint =
+          new Vector2d(belief.getX() + RAYMAX * Math.cos(belief.getTheta() + currentAngle),
+              belief.getY() + RAYMAX * Math.sin(belief.getTheta() + currentAngle));
+
+      // Find the closest intersect.
+      double closestIntersectDistance = RAYMAX;
+      Vector2d closestIntersect = rayEndpoint;
+      for (final MapWall mapwall : map.getWalls()) {
+        Optional<Vector2d> opt = Vector2d.getIntersection(mapwall.getPoint1(), mapwall.getPoint2(),
+            centerOfRobot, rayEndpoint);
+        if (opt.isPresent()) {
+          Vector2d intersect = opt.get();
+          if ((intersect.minus(centerOfRobot)).norm() < closestIntersectDistance) {
+            closestIntersectDistance = intersect.minus(centerOfRobot).norm();
+            closestIntersect = intersect;
+          }
+        }
+      }
+
+      double sampledNoise = Utils.randomN(closestIntersectDistance, SIGMA);
+
+      error *= (scan - sampledNoise);
+      currentAngle += angleDelta;
+    }
+
+    final double geometricMeanError = Math.pow(error, 1.0d / sensorModel.getNumRays());
+    return geometricMeanError;
+  }
+}

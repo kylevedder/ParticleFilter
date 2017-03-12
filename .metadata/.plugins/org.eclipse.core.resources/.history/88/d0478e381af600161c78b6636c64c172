@@ -1,0 +1,7 @@
+package io.vedder.robotics.particlefilter;
+
+public class SensorModel {
+  public SensorModel() {
+    
+  }
+}

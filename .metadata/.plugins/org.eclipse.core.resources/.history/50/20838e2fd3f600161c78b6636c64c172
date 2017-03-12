@@ -1,0 +1,47 @@
+package io.vedder.robotics.particlefilter;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
+import io.vedder.robotics.particlefilter.ParticleContainer.WeightParticle;
+import io.vedder.robotics.particlefilter.messages.SensorMessage;
+
+public class TestMain {
+
+  public static void main(String[] args) {
+    System.out.println("Starting Particle Filter Tester!");
+    System.out.println("Working Directory = " + System.getProperty("user.dir"));
+    String mapPath = "../reference-material/assignment-2-data/map-test.txt";
+    String particleSavePath = "../reference-material/assignment-2-data/test-particles.txt";
+    // String logPath = "../reference-material/assignment-2-data/robot-data.log";
+
+    Map map = new Map(mapPath);
+    SensorModel sensorModel = new SensorModel();
+    ParticleContainer particleContainer =
+        new ParticleContainer(10, new Pose(1, 1, 0), sensorModel, map);
+
+    SensorMessage sm = new SensorMessage(0, 0, 0, 0, 0, Arrays.asList(1.0));
+
+    for (WeightParticle p : particleContainer.getParticles()) {
+      System.out.println(p);
+    }
+
+    particleContainer.updateAndResample(sm);
+
+    for (WeightParticle p : particleContainer.getParticles()) {
+      System.out.println(p);
+    }
+
+    System.out.println(particleContainer.serialize());
+
+    try {
+      Files.write(Paths.get(particleSavePath), Arrays.asList(particleContainer.serialize()));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+  }
+
+}

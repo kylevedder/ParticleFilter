@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="io.vedder.robotics.particlefilter.Map.Pose"/>
+<fullyQualifiedTypeName name="java.lang.Math"/>
+<fullyQualifiedTypeName name="io.vedder.robotics.particlefilter.MotionModel"/>
+<fullyQualifiedTypeName name="java.awt.List"/>
+<fullyQualifiedTypeName name="java.lang.IllegalStateException"/>
+<fullyQualifiedTypeName name="java.util.stream.Collectors"/>
+<fullyQualifiedTypeName name="java.awt.TrayIcon.MessageType"/>
+<fullyQualifiedTypeName name="io.vedder.robotics.particlefilter.LogData"/>
+<fullyQualifiedTypeName name="io.vedder.robotics.particlefilter.messages.DataMessage"/>
+<fullyQualifiedTypeName name="io.vedder.robotics.particlefilter.messages.MessageType"/>
+<fullyQualifiedTypeName name="java.util.Random"/>
+<fullyQualifiedTypeName name="io.vedder.robotics.particlefilter.Map.Vector2d"/>
+<fullyQualifiedTypeName name="java.util.Optional"/>
+<fullyQualifiedTypeName name="io.vedder.robotics.particlefilter.Vector2d"/>
+<fullyQualifiedTypeName name="io.vedder.robotics.particlefilter.messages.BaseMessage"/>
+<fullyQualifiedTypeName name="io.vedder.robotics.particlefilter.messages.OdomMessage"/>
+<fullyQualifiedTypeName name="io.vedder.robotics.particlefilter.messages.SensorMessage"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="io.vedder.robotics.particlefilter.messages.InitMessage"/>
+<fullyQualifiedTypeName name="io.vedder.robotics.particlefilter.ParticleContainer"/>
+<fullyQualifiedTypeName name="io.vedder.robotics.particlefilter.Particle"/>
+</qualifiedTypeNameHistroy>

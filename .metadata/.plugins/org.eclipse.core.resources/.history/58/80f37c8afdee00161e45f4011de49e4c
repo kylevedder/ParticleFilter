@@ -1,0 +1,27 @@
+package io.vedder.robotics.particlefilter;
+
+import java.awt.geom.Point2D;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
+
+public class Map {
+  
+  class MapWall {
+    private final Point2D point1, point2;
+    
+    public MapWall(Point2D point1, Point2D point2) {
+    }
+  }
+  
+  private List<>
+  public Map(String mapPath) {
+    try (Stream<String> stream = Files.lines(Paths.get(mapPath))) {
+      stream.forEach(l -> l.split(","));
+    } catch (IOException e) {
+      System.out.println("Unable to read Map!");
+      throw new IllegalStateException("Cannot open Map!");
+    }
+  }
+}

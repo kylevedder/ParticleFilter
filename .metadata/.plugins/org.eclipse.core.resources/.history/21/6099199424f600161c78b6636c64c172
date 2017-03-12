@@ -1,0 +1,27 @@
+package io.vedder.robotics.particlefilter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.vedder.robotics.particlefilter.messages.InitMessage;
+
+public class ParticleContainer {
+  private final List<Particle> particles;
+
+  public ParticleContainer(final int numberParticles, final Pose defaultPose) {
+    this.particles = new ArrayList<>();
+    for (int i = 0; i < numberParticles; ++i) {
+      this.particles.add(new Particle(defaultPose));
+    }
+  }
+
+  public void initParticles(final InitMessage init) {
+    for (final Particle p : particles) {
+      p.setPose(new Pose(init.getX(), init.getY(), init.getTheta()));
+    }
+  }
+
+  public List<Particle> getParticles() {
+    return particles;
+  }
+}

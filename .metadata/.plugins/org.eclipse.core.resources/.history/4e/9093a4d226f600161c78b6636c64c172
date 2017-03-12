@@ -1,0 +1,45 @@
+package io.vedder.robotics.particlefilter;
+
+import io.vedder.robotics.particlefilter.messages.BaseMessage;
+import io.vedder.robotics.particlefilter.messages.InitMessage;
+import io.vedder.robotics.particlefilter.messages.OdomMessage;
+import io.vedder.robotics.particlefilter.messages.SensorMessage;
+
+public class Main {
+
+  public static void main(String[] args) {
+    System.out.println("Starting Particle Filter!");
+    System.out.println("Working Directory = " + System.getProperty("user.dir"));
+    String mapPath = "../reference-material/assignment-2-data/map.txt";
+    String logPath = "../reference-material/assignment-2-data/robot-data.log";
+    Map map = new Map(mapPath);
+    MotionModel motionModel = new MotionModel();
+    SensorModel sensorModel = new SensorModel();
+    LogData logData = new LogData(logPath);
+    ParticleContainer particleContainer =
+        new ParticleContainer(50, new Pose(0, 0, 0), sensorModel, map);
+    for (BaseMessage message : logData.getData()) {
+      switch (message.getMessageType()) {
+        case INIT: {
+          InitMessage init = message.getInitMessage();
+          particleContainer.initParticles(init);
+        }
+          break;
+        case ODOM: {
+          OdomMessage odom = message.getOdomMessage();
+          motionModel.sampleOdometry(odom);
+          // TODO(kvedder): Banana all particles.
+        }
+          break;
+        case SENSOR: {
+          SensorMessage sense = message.getSensorMessage();
+          // TODO(kvedder): Score all particles.
+          // TODO(kvedder): Resample particles.
+        }
+          break;
+      }
+    }
+    System.out.println("Complete!");
+  }
+
+}

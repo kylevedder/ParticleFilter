@@ -1,0 +1,15 @@
+package io.vedder.robotics.particlefilter;
+
+import io.vedder.robotics.particlefilter.messages.SensorMessage;
+
+public class SensorModel {
+  private final double SIGMA;
+
+  public SensorModel() {
+    SIGMA = 1;
+  }
+
+  public void sampleSensor(final SensorMessage sensorModel) {
+    
+  }
+}

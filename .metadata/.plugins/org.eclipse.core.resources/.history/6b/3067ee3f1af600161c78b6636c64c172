@@ -1,0 +1,9 @@
+package io.vedder.robotics.particlefilter;
+
+public class SensorModel {
+  private static final double sigma;
+  
+  public SensorModel() {
+    sigma = 1;
+  }
+}

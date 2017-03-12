@@ -1,0 +1,34 @@
+package io.vedder.robotics.particlefilter;
+
+import java.util.Random;
+
+import io.vedder.robotics.particlefilter.messages.OdomMessage;
+
+public class MotionModel {
+  private final double sigma;
+  private final Random random;
+
+  public MotionModel() {
+    this.sigma = 1;
+    random = new Random();
+  }
+
+  // Return a random value drawn from a Normal distribution.
+  private double randomN(final double mean, final double stddev) {
+    // Uses Box-Muller transform to turn a pair of uniform random
+    // numbers into a pair of gaussian random numbers
+    double u1 = ((double) random.nextInt(Integer.MAX_VALUE)) / ((double) Integer.MAX_VALUE);
+    double u2 = ((double) random.nextInt(Integer.MAX_VALUE)) / ((double) Integer.MAX_VALUE);
+    double z1 = Math.sqrt(-2.0 * Math.log(u1)) * Math.sin(2.0 * Math.PI * u2);
+    double x1 = z1 * stddev + mean;
+    return x1;
+  }
+
+  /**
+   * Sample given the odometry.
+   */
+  public void sampleOdometry(OdomMessage odomMessage) {
+    
+  }
+
+}

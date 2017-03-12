@@ -1,0 +1,47 @@
+package io.vedder.robotics.particlefilter;
+
+import java.util.Optional;
+
+import io.vedder.robotics.particlefilter.messages.SensorMessage;
+
+public class SensorModel {
+  private final double SIGMA;
+  private final double RAYMAX;
+
+  public SensorModel() {
+    SIGMA = 1;
+    RAYMAX = 4;
+  }
+
+  public void sampleSensor(final SensorMessage sensorModel, final Pose belief, final Map map) {
+    double currentAngle = sensorModel.getMinAngle();
+    double angleDelta = sensorModel.getAngleIncrement();
+
+    for (double scan : sensorModel.getScanRays()) {
+      Vector2d centerOfRobot = new Vector2d(belief.getX(), belief.getY());
+      Vector2d rayEndpoint =
+          new Vector2d(belief.getX() + RAYMAX * Math.cos(belief.getTheta() + currentAngle),
+                       belief.getY() + RAYMAX * Math.sin(belief.getTheta() + currentAngle));
+      
+      double closestIntersectDistance = RAYMAX;
+      Vector2d closestIntersect = rayEndpoint;
+      for (final MapWall mapwall : map.getWalls()) {
+        Optional<Vector2d> opt = Vector2d.getIntersection(mapwall.getPoint1(), mapwall.getPoint2(), centerOfRobot, rayEndpoint);
+        if (opt.isPresent()) {
+          Vector2d intersect = opt.get();
+          if ((intersect.minus(centerOfRobot)).norm() < closestIntersectDistance) {
+            closestIntersectDistance = intersect.minus(centerOfRobot).norm();
+          }
+        }
+      }
+      
+      double sampledNoise = Utils.randomN(scan, SIGMA);
+      currentAngle += angleDelta;
+    }
+
+    // The number of scan rays, N
+    // 3. Min angle
+    // 4. Max angle
+    // 5. Angle increment
+  }
+}

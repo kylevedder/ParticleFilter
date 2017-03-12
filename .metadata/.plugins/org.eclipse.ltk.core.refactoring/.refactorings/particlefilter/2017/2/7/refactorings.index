@@ -1,0 +1,8 @@
+1487301249292	Rename type 'DataMessage'
+1487450327569	Rename field 'sigma'
+1487451434194	Rename local variable 'rotationAngle'
+1487455572976	Rename method 'setWieght'
+1487455751220	Rename method 'updateObservation'
+1487455838205	Rename field 'wieght'
+1487455847471	Rename method 'getWieght'
+1487455853108	Rename local variable 'wieght'

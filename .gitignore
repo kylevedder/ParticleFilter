@@ -1,0 +1,14 @@
+/target/
+/.settings/
+/images-run*/
+.classpath
+.project
+*.class
+*.log
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+

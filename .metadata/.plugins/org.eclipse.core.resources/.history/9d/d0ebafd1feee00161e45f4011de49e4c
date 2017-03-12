@@ -1,0 +1,70 @@
+package io.vedder.robotics.particlefilter;
+
+import java.awt.geom.Point2D;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class Map {
+
+  public class Point {
+
+    private final double x;
+    private final double y;
+
+    public Point(double x, double y) {
+      this.x = x;
+      this.y = y;
+    }
+
+
+    public double getX() {
+      return x;
+    }
+
+    public double getY() {
+      return y;
+    }
+
+
+    @Override
+    public String toString() {
+      return ("(" + x + "," + y + ")");
+    }
+  }
+
+  class MapWall {
+    private final Point point1, point2;
+
+    public MapWall(Point point1, Point point2) {
+      this.point1 = point1;
+      this.point2 = point2;
+    }
+  }
+
+  private final List<MapWall> walls;
+
+  public Map(String mapPath) {
+    walls = new ArrayList<>();
+
+    try (Stream<String> stream = Files.lines(Paths.get(mapPath))) {
+      stream.forEach(l -> {
+        List<Double> elems = Arrays.asList(l.split(",")).stream().map(n -> Double.parseDouble(n))
+            .collect(Collectors.toList());
+        if (elems.size() != 4) {
+          throw new IllegalStateException("There must be four values for the map");
+        }
+        walls.add(new MapWall(new Point(elems.get(0), elems.get(1)),
+            new Point(elems.get(2), elems.get(3))));
+      });
+    } catch (IOException e) {
+      System.out.println("Unable to read Map!");
+      throw new IllegalStateException("Cannot open Map!");
+    }
+  }
+}

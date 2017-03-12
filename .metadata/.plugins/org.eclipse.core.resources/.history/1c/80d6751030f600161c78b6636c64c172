@@ -1,0 +1,100 @@
+package io.vedder.robotics.particlefilter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+import io.vedder.robotics.particlefilter.messages.InitMessage;
+import io.vedder.robotics.particlefilter.messages.SensorMessage;
+
+public class ParticleContainer {
+
+  class WeightParticle {
+    private Particle particle;
+    private double weight;
+
+    public WeightParticle(final Pose defaultPose, double wieght) {
+      this.particle = new Particle(defaultPose);
+      this.weight = wieght;
+    }
+
+    public WeightParticle(final WeightParticle wp) {
+      this.particle = wp.getParticle();
+      this.weight = wp.getWeight();
+    }
+
+    public Particle getParticle() {
+      return particle;
+    }
+
+    public void setParticle(Particle particle) {
+      this.particle = particle;
+    }
+
+    public double getWeight() {
+      return weight;
+    }
+
+    public void setWeight(double weight) {
+      this.weight = weight;
+    }
+
+    @Override
+    public String toString() {
+      return "WeightParticle [particle=" + particle + ", weight=" + weight + "]";
+    }
+
+
+
+  }
+
+  private List<WeightParticle> particles;
+  private final SensorModel sensorModel;
+  private final Map map;
+
+  public ParticleContainer(final int numberParticles, final Pose defaultPose,
+      final SensorModel sensorModel, final Map map) {
+    this.particles = new ArrayList<>();
+    this.sensorModel = sensorModel;
+    this.map = map;
+    for (int i = 0; i < numberParticles; ++i) {
+      this.particles.add(new WeightParticle(new Pose(Utils.randomN(0, 0.1) + defaultPose.getX(),
+          Utils.randomN(0, 0.1) + defaultPose.getY()), 1));
+    }
+  }
+
+  public void initParticles(final InitMessage init) {
+    for (final WeightParticle weightParticle : particles) {
+      weightParticle.getParticle().setPose(new Pose(init.getX(), init.getY(), init.getTheta()));
+    }
+  }
+
+  List<WeightParticle> getParticles() {
+    return particles;
+  }
+
+  public void updateAndResample(final SensorMessage sensorMessage) {
+    // Update weight
+    for (final WeightParticle weightParticle : particles) {
+      final double newWeight =
+          sensorModel.sampleSensor(sensorMessage, weightParticle.getParticle(), map);
+      weightParticle.setWeight(newWeight);
+    }
+
+    final double totalWeights = particles.stream().mapToDouble(e -> e.weight).sum();
+
+    // Resamples based on random selection. Does not use the low variance method of sampling.
+    particles = particles.stream().map(e -> {
+      double selection = Utils.random.nextDouble() * totalWeights;
+      for (WeightParticle wp : particles) {
+        if (wp.weight < selection) {
+          selection -= wp.weight;
+        } else {
+          return new WeightParticle(wp);
+        }
+      }
+      return new WeightParticle(particles.get(particles.size() - 1));
+    }).collect(Collectors.toList());
+  }
+}

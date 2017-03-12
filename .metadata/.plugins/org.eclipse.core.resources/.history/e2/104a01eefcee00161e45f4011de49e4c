@@ -1,0 +1,11 @@
+package io.vedder.robotics.particlefilter;
+
+public class Main {
+
+  public static void main(String[] args) {
+    System.out.println("Starting Particle Filter!");
+    String mapPath = "resources/map.txt";
+  }
+  
+
+}

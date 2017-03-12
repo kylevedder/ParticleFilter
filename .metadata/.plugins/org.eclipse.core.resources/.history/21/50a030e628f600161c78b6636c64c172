@@ -1,0 +1,75 @@
+package io.vedder.robotics.particlefilter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import io.vedder.robotics.particlefilter.messages.InitMessage;
+import io.vedder.robotics.particlefilter.messages.SensorMessage;
+
+public class ParticleContainer {
+
+  class WeightParticle {
+    private Particle particle;
+    private double weight;
+
+    public WeightParticle(final Pose defaultPose, double wieght) {
+      this.particle = new Particle(defaultPose);
+      this.weight = wieght;
+    }
+
+    public Particle getParticle() {
+      return particle;
+    }
+
+    public void setParticle(Particle particle) {
+      this.particle = particle;
+    }
+
+    public double getWeight() {
+      return weight;
+    }
+
+    public void setWeight(double weight) {
+      this.weight = weight;
+    }
+  }
+
+  private final Random rand;
+  private final List<WeightParticle> particles;
+  private final SensorModel sensorModel;
+  private final Map map;
+
+  public ParticleContainer(final int numberParticles, final Pose defaultPose,
+      final SensorModel sensorModel, final Map map) {
+    rand = new Random();
+    this.particles = new ArrayList<>();
+    this.sensorModel = sensorModel;
+    this.map = map;
+    for (int i = 0; i < numberParticles; ++i) {
+      this.particles.add(new WeightParticle(defaultPose, 1));
+    }
+  }
+
+  public void initParticles(final InitMessage init) {
+    for (final WeightParticle weightParticle : particles) {
+      weightParticle.getParticle().setPose(new Pose(init.getX(), init.getY(), init.getTheta()));
+    }
+  }
+
+  public void updateAndResample(final SensorMessage sensorMessage) {
+    // Update weight
+    for (final WeightParticle weightParticle : particles) {
+      final double newWeight =
+          sensorModel.sampleSensor(sensorMessage, weightParticle.getParticle(), map);
+      weightParticle.setWeight(newWeight);
+    }
+
+    final double totalWeights = particles.stream().mapToDouble(e -> e.weight).sum();
+
+    particles.stream().map(e -> {
+      double selection = rand.nextDouble() * totalWeights;
+      return e;
+    });
+  }
+}

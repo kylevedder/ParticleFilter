@@ -1,0 +1,19 @@
+package io.vedder.robotics.particlefilter;
+
+import io.vedder.robotics.particlefilter.messages.OdomMessage;
+
+public class MotionModel {
+  private final double sigma;
+
+  public MotionModel() {
+    this.sigma = 1;
+  }
+
+  /**
+   * Sample given the odometry.
+   */
+  public void sampleOdometry(OdomMessage odomMessage) {
+    // Composed of 2 uniform, exponential decay, and normal
+  }
+
+}

@@ -1,0 +1,62 @@
+package io.vedder.robotics.particlefilter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.vedder.robotics.particlefilter.messages.InitMessage;
+import io.vedder.robotics.particlefilter.messages.SensorMessage;
+
+public class ParticleContainer {
+
+  class WeightParticle {
+    private Particle particle;
+    private double wieght;
+
+    public WeightParticle(Particle particle, double wieght) {
+      this.particle = particle;
+      this.wieght = wieght;
+    }
+
+    public Particle getParticle() {
+      return particle;
+    }
+
+    public void setParticle(Particle particle) {
+      this.particle = particle;
+    }
+
+    public double getWieght() {
+      return wieght;
+    }
+
+    public void setWieght(double wieght) {
+      this.wieght = wieght;
+    }
+  }
+
+  private final List<Particle> particles;
+  private final SensorModel sensorModel;
+  private final Map map;
+
+  public ParticleContainer(final int numberParticles, final Pose defaultPose,
+      final SensorModel sensorModel, final Map map) {
+    this.particles = new ArrayList<>();
+    this.sensorModel = sensorModel;
+    this.map = map;
+    for (int i = 0; i < numberParticles; ++i) {
+      this.particles.add(new Particle(defaultPose));
+    }
+  }
+
+  public void initParticles(final InitMessage init) {
+    for (final Particle p : particles) {
+      p.setPose(new Pose(init.getX(), init.getY(), init.getTheta()));
+    }
+  }
+
+  public void updateObservation(final SensorMessage sensorMessage) {
+    for (Particle particle : particles) {
+      sensorModel.sampleSensor(sensorMessage, particle, map);
+    }
+  }
+}

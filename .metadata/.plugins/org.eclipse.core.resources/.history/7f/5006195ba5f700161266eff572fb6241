@@ -1,0 +1,37 @@
+package io.vedder.robotics.particlefilter;
+
+import io.vedder.robotics.particlefilter.messages.OdomMessage;
+
+public class MotionModel {
+  private final double STDDEV_X;
+  private final double STDDEV_Y;
+  private final double STDDEV_THETA;
+
+
+  public MotionModel() {
+    STDDEV_X = 0.01;
+    STDDEV_Y = 0.01;
+    STDDEV_THETA = 0.001;
+  }
+
+  /**
+   * Sample given the odometry.
+   */
+  public void sampleOdometry(OdomMessage odomMessage, final Particle particle) {
+    final double noiseyRobotFrameX = Utils.randomN(odomMessage.getXOdom(), STDDEV_X);
+    final double noiseyRobotFrameY = Utils.randomN(odomMessage.getYOdom(), STDDEV_Y);
+    final double noiseyRobotFrameTheta = Utils.randomN(odomMessage.getAngleOdom(), STDDEV_THETA);
+
+    final Pose currentPose = particle.getPose();
+
+    final double noiseyWorldFrameX = noiseyRobotFrameX * Math.cos(currentPose.getTheta())
+        + noiseyRobotFrameY * Math.sin(currentPose.getTheta());
+    final double noiseyWorldFrameY = noiseyRobotFrameY * Math.sin(currentPose.getTheta())
+        + noiseyRobotFrameY * Math.cos(currentPose.getTheta());
+
+    final double noiseyWorldFrameTheta = noiseyRobotFrameTheta + currentPose.getTheta();
+
+    particle.setPose(new Pose(noiseyWorldFrameX, noiseyWorldFrameY, noiseyWorldFrameTheta));
+  }
+
+}
